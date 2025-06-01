@@ -16,30 +16,19 @@ import {
   calculateDistance,
 } from '@/components/data/attractions';
 import { mapStyles as styles } from '@/styles/screens/app/map.styles';
+import { useLocationStore } from '@/stores/location';
 
 const { height } = Dimensions.get('window');
 
 export default function MapScreen() {
   const isDarkMode = useThemeStore((state) => state.isDarkMode);
   const theme = isDarkMode ? darkTheme : lightTheme;
-  const [location, setLocation] = useState<Location.LocationObject | null>(
-    null
-  );
   const [attractions, setAttractions] = useState([]);
   const [selectedAttraction, setSelectedAttraction] = useState(null);
   const bottomSheetHeight = useSharedValue(height * 0.3);
   const isExpanded = useSharedValue(false);
   const mapRef = useRef(null);
-
-  useEffect(() => {
-    (async () => {
-      const { status } = await Location.requestForegroundPermissionsAsync();
-      if (status === 'granted') {
-        const location = await Location.getCurrentPositionAsync({});
-        setLocation(location);
-      }
-    })();
-  }, []);
+  const location = useLocationStore((state) => state.location);
 
   useEffect(() => {
     (async () => {
@@ -83,13 +72,14 @@ export default function MapScreen() {
     <View
       style={[styles.container, { backgroundColor: theme.colors.background }]}
     >
-      {selectedAttraction && selectedAttraction.coordinates && (
+      {location && (
         <Map
           ref={mapRef}
           style={styles.map}
+          location={location}
           initialRegion={{
-            latitude: selectedAttraction.coordinates.latitude,
-            longitude: selectedAttraction.coordinates.longitude,
+            latitude: location.latitude,
+            longitude: location.longitude,
             latitudeDelta: 0.1,
             longitudeDelta: 0.1,
           }}
@@ -100,6 +90,7 @@ export default function MapScreen() {
             title: attraction.name,
             onPress: () => handleMarkerPress(attraction),
           }))}
+          showsUserLocation={true}
         />
       )}
 

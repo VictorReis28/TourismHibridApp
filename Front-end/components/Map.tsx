@@ -1,7 +1,8 @@
-import React, { forwardRef, useImperativeHandle, useRef } from 'react';
+import React, { forwardRef, useImperativeHandle, useRef, useEffect } from 'react';
 import { Platform, View, StyleSheet } from 'react-native';
 import { useThemeStore } from '@/stores/theme';
 import { darkTheme, lightTheme } from '@/styles/theme';
+import MapView, { Marker, PROVIDER_GOOGLE } from 'react-native-maps';
 
 interface MapProps {
   style?: any;
@@ -19,13 +20,14 @@ interface MapProps {
     title: string;
     onPress?: () => void;
   }>;
+  showsUserLocation?: boolean;
 }
 
 export const Map = forwardRef<any, MapProps>(
-  ({ style, location, markers, initialRegion }, ref) => {
+  ({ style, location, markers, initialRegion, showsUserLocation = true }, ref) => {
     const isDarkMode = useThemeStore((state) => state.isDarkMode);
     const theme = isDarkMode ? darkTheme : lightTheme;
-    const mapRef = useRef(null);
+    const mapRef = useRef<MapView>(null);
 
     useImperativeHandle(ref, () => ({
       animateToRegion: (region: any) => {
@@ -35,12 +37,19 @@ export const Map = forwardRef<any, MapProps>(
       },
     }));
 
+    useEffect(() => {
+      if (location && mapRef.current) {
+        mapRef.current.animateToRegion({
+          latitude: location.latitude,
+          longitude: location.longitude,
+          latitudeDelta: 0.01,
+          longitudeDelta: 0.01,
+        });
+      }
+    }, [location]);
+
     if (Platform.OS === 'web') {
-      const center =
-        initialRegion ||
-        (markers && markers.length > 0
-          ? { latitude: markers[0].latitude, longitude: markers[0].longitude }
-          : { latitude: 48.8584, longitude: 2.2945 });
+      const center = location || initialRegion || { latitude: 48.8584, longitude: 2.2945 };
       const zoom = 13;
 
       const markersString = markers
@@ -74,44 +83,38 @@ export const Map = forwardRef<any, MapProps>(
               referrerPolicy="no-referrer-when-downgrade"
               src={`https://www.google.com/maps/embed/v1/view?key=YOUR_GOOGLE_MAPS_API_KEY&center=${
                 center.latitude
-              },${center.longitude}&zoom=${zoom}${
-                markersString || ''
-              }${mapStyle}`}
+              },${center.longitude}&zoom=${zoom}${markersString || ''}${mapStyle}`}
             />
           </div>
         </View>
       );
     }
 
-    if (Platform.OS === 'ios' || Platform.OS === 'android') {
-      const MapView = require('react-native-maps').default;
-      const { Marker } = require('react-native-maps');
-
-      return (
-        <View style={[styles.container, style]}>
-          <MapView
-            ref={mapRef}
-            style={styles.map}
-            initialRegion={initialRegion}
-            customMapStyle={isDarkMode ? darkMapStyle : []}
-          >
-            {markers?.map((marker) => (
-              <Marker
-                key={marker.id}
-                coordinate={{
-                  latitude: marker.latitude,
-                  longitude: marker.longitude,
-                }}
-                title={marker.title}
-                onPress={marker.onPress}
-              />
-            ))}
-          </MapView>
-        </View>
-      );
-    }
-
-    return null;
+    return (
+      <View style={[styles.container, style]}>
+        <MapView
+          ref={mapRef}
+          style={styles.map}
+          provider={PROVIDER_GOOGLE}
+          initialRegion={initialRegion}
+          showsUserLocation={showsUserLocation}
+          showsMyLocationButton={true}
+          customMapStyle={isDarkMode ? darkMapStyle : []}
+        >
+          {markers?.map((marker) => (
+            <Marker
+              key={marker.id}
+              coordinate={{
+                latitude: marker.latitude,
+                longitude: marker.longitude,
+              }}
+              title={marker.title}
+              onPress={marker.onPress}
+            />
+          ))}
+        </MapView>
+      </View>
+    );
   }
 );
 
