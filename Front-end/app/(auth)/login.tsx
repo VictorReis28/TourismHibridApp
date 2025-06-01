@@ -20,8 +20,7 @@ export default function Login() {
   const [error, setError] = useState('');
   const [biometricsAvailable, setBiometricsAvailable] = useState(false);
 
-  const { login, loginWithBiometrics, checkBiometricsAvailable } =
-    useAuthStore();
+  const { login, loginWithBiometrics, checkBiometricsAvailable } = useAuthStore();
 
   const isDarkMode = useThemeStore((state) => state.isDarkMode);
   const theme = isDarkMode ? darkTheme : lightTheme;
@@ -33,7 +32,7 @@ export default function Login() {
   const handleLogin = async () => {
     try {
       setError('');
-      await login(email, password); // login real
+      await login(email, password);
       router.replace('/(app)');
     } catch (error: any) {
       setError(error.message || 'Erro ao fazer login');
