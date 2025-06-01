@@ -59,6 +59,28 @@ async function main() {
     return reply.send({ user });
   });
 
+  // --- Esqueci a senha ---
+  fastify.post("/auth/forgot-password", async (req, reply) => {
+    const { email, newPassword } = req.body as any;
+    if (!email || !newPassword) {
+      return reply
+        .status(400)
+        .send({ message: "Email e nova senha são obrigatórios" });
+    }
+    const [rows] = await db.query("SELECT id FROM users WHERE email = ?", [
+      email,
+    ]);
+    if ((rows as any[]).length === 0) {
+      return reply.status(404).send({ message: "Usuário não encontrado" });
+    }
+    const hash = await bcrypt.hash(newPassword, 10);
+    await db.query("UPDATE users SET password = ? WHERE email = ?", [
+      hash,
+      email,
+    ]);
+    return reply.send({ message: "Senha alterada com sucesso" });
+  });
+
   // --- Biometria ---
   fastify.get("/users/:id/biometrics", async (req, reply) => {
     const { id } = req.params as any;

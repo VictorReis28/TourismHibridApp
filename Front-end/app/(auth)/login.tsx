@@ -13,6 +13,7 @@ import { useAuthStore } from '@/stores/auth';
 import { Fingerprint } from 'lucide-react-native';
 import { useThemeStore } from '@/stores/theme';
 import { darkTheme, lightTheme } from '@/styles/theme';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 export default function Login() {
   const [email, setEmail] = useState('');
@@ -20,20 +21,22 @@ export default function Login() {
   const [error, setError] = useState('');
   const [biometricsAvailable, setBiometricsAvailable] = useState(false);
 
-  const { login, loginWithBiometrics, checkBiometricsAvailable } =
+  const { login, loginWithBiometrics, checkBiometricsAvailable, user } =
     useAuthStore();
 
   const isDarkMode = useThemeStore((state) => state.isDarkMode);
   const theme = isDarkMode ? darkTheme : lightTheme;
+  const insets = useSafeAreaInsets();
 
   useEffect(() => {
+    // Só mostra o botão biométrico se o usuário já fez login antes e biometria está habilitada
     checkBiometricsAvailable().then(setBiometricsAvailable);
-  }, []);
+  }, [user]);
 
   const handleLogin = async () => {
     try {
       setError('');
-      await login(email, password); // login real
+      await login(email, password);
       router.replace('/(app)');
     } catch (error: any) {
       setError(error.message || 'Erro ao fazer login');
@@ -106,7 +109,8 @@ export default function Login() {
           <Text style={styles.buttonText}>Entrar</Text>
         </TouchableOpacity>
 
-        {biometricsAvailable && (
+        {/* Botão biométrico só aparece se biometria estiver disponível */}
+        {biometricsAvailable && user && (
           <TouchableOpacity
             style={[
               styles.biometricButton,
@@ -124,7 +128,9 @@ export default function Login() {
         )}
 
         <View style={styles.links}>
-          <TouchableOpacity onPress={() => router.push('/forgot-password')}>
+          <TouchableOpacity
+            onPress={() => router.push('/(auth)/forgot-password')}
+          >
             <Text style={[styles.link, { color: theme.colors.primary }]}>
               Esqueceu a senha?
             </Text>

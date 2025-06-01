@@ -2,6 +2,7 @@ import { Tabs } from 'expo-router';
 import { Chrome as Home, Map, User } from 'lucide-react-native';
 import { useThemeStore } from '@/stores/theme';
 import { darkTheme, lightTheme } from '@/styles/theme';
+import { Platform } from 'react-native';
 
 export default function AppLayout() {
   const isDarkMode = useThemeStore((state) => state.isDarkMode);
@@ -15,8 +16,8 @@ export default function AppLayout() {
           borderTopWidth: 0,
           elevation: 0,
           shadowOpacity: 0,
-          height: 60,
-          paddingBottom: 8,
+          height: Platform.OS === 'ios' ? 88 : 60,
+          paddingBottom: Platform.OS === 'ios' ? 28 : 8,
           backgroundColor: theme.colors.card,
           borderTopColor: theme.colors.border,
         },

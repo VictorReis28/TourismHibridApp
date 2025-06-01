@@ -22,6 +22,7 @@ interface AuthState {
   toggleBiometrics: () => Promise<void>;
   updateUserAvatar: (avatarUri: string) => Promise<void>;
   testConnection: () => Promise<void>; // Função para testar conexão com backend
+  changePassword: (email: string, newPassword: string) => Promise<void>; // Função para alterar senha
 }
 
 // Usa variável de ambiente do .env
@@ -225,6 +226,22 @@ export const useAuthStore = create<AuthState>((set, get) => ({
       console.log('Teste API sucesso:', data);
     } catch (error: any) {
       console.log('Erro fetch no teste:', error.message);
+    }
+  },
+
+  changePassword: async (email: string, newPassword: string) => {
+    try {
+      const res = await fetch(`${API_URL}/auth/forgot-password`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, newPassword }),
+      });
+      if (!res.ok) {
+        const data = await res.json();
+        throw new Error(data.message || 'Erro ao alterar senha');
+      }
+    } catch (error: any) {
+      throw new Error(error.message || 'Erro ao alterar senha');
     }
   },
 }));
