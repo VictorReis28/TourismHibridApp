@@ -21,9 +21,10 @@ interface AuthState {
   setupBiometrics: () => Promise<void>;
   toggleBiometrics: () => Promise<void>;
   updateUserAvatar: (avatarUri: string) => Promise<void>;
+  testConnection: () => Promise<void>; // Função para testar conexão com backend
 }
 
-// URL base da API
+// Usa variável de ambiente do .env
 const API_URL = process.env.EXPO_PUBLIC_API_URL || 'http://localhost:3001';
 
 export const useAuthStore = create<AuthState>((set, get) => ({
@@ -45,7 +46,6 @@ export const useAuthStore = create<AuthState>((set, get) => ({
       const data = await res.json();
       set({ isAuthenticated: true, user: data.user });
 
-      // Buscar biometria do backend
       const bioRes = await fetch(`${API_URL}/users/${data.user.id}/biometrics`);
       const bioData = await bioRes.json();
       set({ isBiometricsEnabled: !!bioData.enabled });
@@ -206,5 +206,25 @@ export const useAuthStore = create<AuthState>((set, get) => ({
     const bioRes = await fetch(`${API_URL}/users/${user.id}/biometrics`);
     const bioData = await bioRes.json();
     return hasHardware && isEnrolled && !!bioData.enabled;
+  },
+
+  testConnection: async () => {
+    try {
+      console.log('Testando conexão com API em:', API_URL);
+      const res = await fetch(`${API_URL}/auth/login`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: 'teste@teste.com', password: '123456' }),
+      });
+      if (!res.ok) {
+        const data = await res.json();
+        console.log('Erro da API no teste:', data);
+        return;
+      }
+      const data = await res.json();
+      console.log('Teste API sucesso:', data);
+    } catch (error: any) {
+      console.log('Erro fetch no teste:', error.message);
+    }
   },
 }));

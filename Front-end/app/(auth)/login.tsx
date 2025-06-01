@@ -19,8 +19,10 @@ export default function Login() {
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [biometricsAvailable, setBiometricsAvailable] = useState(false);
+
   const { login, loginWithBiometrics, checkBiometricsAvailable } =
     useAuthStore();
+
   const isDarkMode = useThemeStore((state) => state.isDarkMode);
   const theme = isDarkMode ? darkTheme : lightTheme;
 
@@ -31,16 +33,7 @@ export default function Login() {
   const handleLogin = async () => {
     try {
       setError('');
-      if (!email && !password && biometricsAvailable) {
-        await handleBiometricLogin();
-        return;
-      }
-
-      if (!email || !password) {
-        setError('Por favor, preencha todos os campos');
-        return;
-      }
-      await login(email, password);
+      await login(email, password); // login real
       router.replace('/(app)');
     } catch (error: any) {
       setError(error.message || 'Erro ao fazer login');

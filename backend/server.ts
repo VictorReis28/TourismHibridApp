@@ -4,8 +4,9 @@ import dotenv from "dotenv";
 import mysql from "mysql2/promise";
 import bcrypt from "bcryptjs";
 import { randomUUID } from "crypto";
+import { URL } from "url";
 
-dotenv.config({ path: "../database/.env" });
+require("dotenv").config({ path: __dirname + "/../Backend/.env" }); // Caminho absoluto para o .env do backend
 
 async function main() {
   const fastify = Fastify();
@@ -138,10 +139,16 @@ async function main() {
     return reply.send({ success: true });
   });
 
+  // --- Teste de conexão ---
+  fastify.get("/ping", async (req, reply) => {
+    return reply.send({ message: "pong" });
+  });
+
   // --- Inicialização ---
+  // Sempre ouve em 0.0.0.0 para aceitar conexões externas/local/ngrok
   fastify.listen({ port: 3001, host: "0.0.0.0" }, (err, address) => {
     if (err) {
-      console.error(err);
+      console.error("Erro ao iniciar o servidor:", err);
       process.exit(1);
     }
     console.log(`Fastify server rodando em ${address}`);
