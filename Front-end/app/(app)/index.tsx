@@ -6,6 +6,7 @@ import {
   RefreshControl,
   Pressable,
   TextInput,
+  TouchableOpacity, // <-- Adicionado aqui
 } from 'react-native';
 import { Image } from 'expo-image';
 import {
