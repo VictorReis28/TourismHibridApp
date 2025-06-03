@@ -1,5 +1,12 @@
 import React, { useState } from 'react';
-import { View, Text, TouchableOpacity, Platform, Alert } from 'react-native';
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  Platform,
+  Alert,
+  ScrollView,
+} from 'react-native';
 import { Image } from 'expo-image';
 import * as ImagePicker from 'expo-image-picker';
 import { useThemeStore } from '@/stores/theme';
@@ -103,104 +110,110 @@ export default function ProfileScreen() {
   );
 
   return (
-    <View
-      style={[
-        profileStyles.container,
-        { backgroundColor: theme.colors.background },
-      ]}
+    <ScrollView
+      style={{ flex: 1, backgroundColor: theme.colors.background }}
+      contentContainerStyle={{ flexGrow: 1 }}
+      showsVerticalScrollIndicator={false}
     >
-      <View style={profileStyles.header}>
-        <Text style={[profileStyles.title, { color: theme.colors.text }]}>
-          Perfil
-        </Text>
-      </View>
-
-      <View style={profileStyles.profileSection}>
-        <View
-          style={[
-            profileStyles.avatarContainer,
-            { borderColor: isDarkMode ? '#FFF' : '#000' },
-          ]}
-        >
-          <Image
-            source={
-              user?.avatar
-                ? { uri: user.avatar }
-                : require('@/assets/images/user-profile.png')
-            }
-            style={profileStyles.avatar}
-            contentFit="cover"
-          />
-          <View style={profileStyles.photoButtons}>
-            <TouchableOpacity
-              style={[
-                profileStyles.photoButton,
-                { backgroundColor: theme.colors.primary },
-              ]}
-              onPress={takePhoto}
-            >
-              <Camera size={20} color="#FFF" />
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={[
-                profileStyles.photoButton,
-                { backgroundColor: theme.colors.primary },
-              ]}
-              onPress={pickImage}
-            >
-              <Text style={profileStyles.photoButtonText}>+</Text>
-            </TouchableOpacity>
-          </View>
-        </View>
-        <Text style={[profileStyles.name, { color: theme.colors.text }]}>
-          {user?.name || 'Usuário'}
-        </Text>
-        <Text
-          style={[profileStyles.email, { color: theme.colors.textSecondary }]}
-        >
-          {user?.email || 'usuario@exemplo.com'}
-        </Text>
-      </View>
-
       <View
         style={[
-          profileStyles.menuSection,
-          { backgroundColor: theme.colors.card },
+          profileStyles.container,
+          { backgroundColor: theme.colors.background, flex: 1 },
         ]}
       >
-        <MenuItem
-          icon={isDarkMode ? Sun : Moon}
-          title="Modo Escuro"
-          onPress={toggleTheme}
-          value={isDarkMode ? 'Ativado' : 'Desativado'}
-        />
-        {Platform.OS !== 'web' && (
-          <MenuItem
-            icon={Fingerprint}
-            title="Login Biométrico"
-            onPress={handleBiometricsToggle}
-            value={isBiometricsEnabled ? 'Ativado' : 'Desativado'}
-          />
-        )}
-        <MenuItem icon={Key} title="Alterar Senha" onPress={() => {}} />
-        <MenuItem icon={Bell} title="Notificações" onPress={() => {}} />
-        <MenuItem
-          icon={Settings}
-          title="Administração"
-          onPress={() => router.push('/admin')}
-        />
-      </View>
+        <View style={profileStyles.header}>
+          <Text style={[profileStyles.title, { color: theme.colors.text }]}>
+            Perfil
+          </Text>
+        </View>
 
-      <TouchableOpacity
-        style={[
-          profileStyles.logoutButton,
-          { backgroundColor: theme.colors.error },
-        ]}
-        onPress={handleLogout}
-      >
-        <LogOut size={20} color="#FFF" />
-        <Text style={profileStyles.logoutText}>Sair</Text>
-      </TouchableOpacity>
-    </View>
+        <View style={profileStyles.profileSection}>
+          <View
+            style={[
+              profileStyles.avatarContainer,
+              { borderColor: isDarkMode ? '#FFF' : '#000' },
+            ]}
+          >
+            <Image
+              source={
+                user?.avatar
+                  ? { uri: user.avatar }
+                  : require('@/assets/images/user-profile.png')
+              }
+              style={profileStyles.avatar}
+              contentFit="cover"
+            />
+            <View style={profileStyles.photoButtons}>
+              <TouchableOpacity
+                style={[
+                  profileStyles.photoButton,
+                  { backgroundColor: theme.colors.primary },
+                ]}
+                onPress={takePhoto}
+              >
+                <Camera size={20} color="#FFF" />
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={[
+                  profileStyles.photoButton,
+                  { backgroundColor: theme.colors.primary },
+                ]}
+                onPress={pickImage}
+              >
+                <Text style={profileStyles.photoButtonText}>+</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+          <Text style={[profileStyles.name, { color: theme.colors.text }]}>
+            {user?.name || 'Usuário'}
+          </Text>
+          <Text
+            style={[profileStyles.email, { color: theme.colors.textSecondary }]}
+          >
+            {user?.email || 'usuario@exemplo.com'}
+          </Text>
+        </View>
+
+        <View
+          style={[
+            profileStyles.menuSection,
+            { backgroundColor: theme.colors.card },
+          ]}
+        >
+          <MenuItem
+            icon={isDarkMode ? Sun : Moon}
+            title="Modo Escuro"
+            onPress={toggleTheme}
+            value={isDarkMode ? 'Ativado' : 'Desativado'}
+          />
+          {Platform.OS !== 'web' && (
+            <MenuItem
+              icon={Fingerprint}
+              title="Login Biométrico"
+              onPress={handleBiometricsToggle}
+              value={isBiometricsEnabled ? 'Ativado' : 'Desativado'}
+            />
+          )}
+          <MenuItem icon={Key} title="Alterar Senha" onPress={() => {}} />
+          <MenuItem icon={Bell} title="Notificações" onPress={() => {}} />
+          <MenuItem
+            icon={Settings}
+            title="Administração"
+            onPress={() => router.push('/admin')}
+          />
+        </View>
+
+        <TouchableOpacity
+          style={[
+            profileStyles.logoutButton,
+            { backgroundColor: theme.colors.error },
+          ]}
+          onPress={handleLogout}
+        >
+          <LogOut size={20} color="#FFF" />
+          <Text style={profileStyles.logoutText}>Sair</Text>
+        </TouchableOpacity>
+      </View>
+    </ScrollView>
   );
 }

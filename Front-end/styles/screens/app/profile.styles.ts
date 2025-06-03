@@ -3,6 +3,7 @@ import { StyleSheet } from 'react-native';
 export const profileStyles = StyleSheet.create({
   container: {
     flex: 1,
+    minHeight: '100%',
   },
   header: {
     padding: 20,
