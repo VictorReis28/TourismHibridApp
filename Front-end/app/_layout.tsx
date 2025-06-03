@@ -41,7 +41,11 @@ export default function RootLayout() {
 
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
-      {!isAuthenticated ? <Redirect href="/(auth)/login" /> : null}
+      {!isAuthenticated ? (
+        <Redirect href="/(auth)/login" />
+      ) : (
+        <Redirect href="/(app)" />
+      )}
       <Stack screenOptions={{ headerShown: false }}>
         <Stack.Screen name="(auth)" options={{ headerShown: false }} />
         <Stack.Screen name="(app)" options={{ headerShown: false }} />

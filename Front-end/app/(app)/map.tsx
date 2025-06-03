@@ -28,7 +28,7 @@ export default function MapScreen() {
   const bottomSheetHeight = useSharedValue(height * 0.3);
   const isExpanded = useSharedValue(false);
   const mapRef = useRef(null);
-  const location = useLocationStore((state) => state.location);
+  const { location, loading, error, initializeLocation } = useLocationStore();
 
   useEffect(() => {
     (async () => {
@@ -37,6 +37,12 @@ export default function MapScreen() {
       if (data.length > 0) setSelectedAttraction(data[0]);
     })();
   }, []);
+
+  useEffect(() => {
+    if (!location && !loading && !error) {
+      initializeLocation();
+    }
+  }, [location, loading, error, initializeLocation]);
 
   const toggleBottomSheet = () => {
     const newHeight = isExpanded.value ? height * 0.3 : height * 0.7;
@@ -68,31 +74,78 @@ export default function MapScreen() {
     height: bottomSheetHeight.value,
   }));
 
+  // Loading
+  if (loading) {
+    return (
+      <View
+        style={[
+          styles.container,
+          { justifyContent: 'center', alignItems: 'center' },
+        ]}
+      >
+        <Text style={{ color: theme.colors.text }}>Obtendo localização...</Text>
+      </View>
+    );
+  }
+
+  // Erro
+  if (error) {
+    return (
+      <View
+        style={[
+          styles.container,
+          { justifyContent: 'center', alignItems: 'center' },
+        ]}
+      >
+        <Text style={{ color: theme.colors.error }}>{error}</Text>
+      </View>
+    );
+  }
+
+  // Sem localização válida
+  if (
+    !location ||
+    typeof location.latitude !== 'number' ||
+    typeof location.longitude !== 'number'
+  ) {
+    return (
+      <View
+        style={[
+          styles.container,
+          { justifyContent: 'center', alignItems: 'center' },
+        ]}
+      >
+        <Text style={{ color: theme.colors.text }}>
+          Localização não disponível.
+        </Text>
+      </View>
+    );
+  }
+
   return (
     <View
       style={[styles.container, { backgroundColor: theme.colors.background }]}
     >
-      {location && (
-        <Map
-          ref={mapRef}
-          style={styles.map}
-          location={location}
-          initialRegion={{
-            latitude: location.latitude,
-            longitude: location.longitude,
-            latitudeDelta: 0.1,
-            longitudeDelta: 0.1,
-          }}
-          markers={attractions.map((attraction) => ({
-            id: attraction.id,
-            latitude: attraction.coordinates.latitude,
-            longitude: attraction.coordinates.longitude,
-            title: attraction.name,
-            onPress: () => handleMarkerPress(attraction),
-          }))}
-          showsUserLocation={true}
-        />
-      )}
+      {/* Só renderize o Map se location estiver disponível e válido */}
+      <Map
+        ref={mapRef}
+        style={styles.map}
+        location={location}
+        initialRegion={{
+          latitude: location.latitude,
+          longitude: location.longitude,
+          latitudeDelta: 0.1,
+          longitudeDelta: 0.1,
+        }}
+        markers={attractions.map((attraction) => ({
+          id: attraction.id,
+          latitude: attraction.coordinates.latitude,
+          longitude: attraction.coordinates.longitude,
+          title: attraction.name,
+          onPress: () => handleMarkerPress(attraction),
+        }))}
+        showsUserLocation={true}
+      />
 
       <Animated.View
         style={[
@@ -134,11 +187,13 @@ export default function MapScreen() {
                 ]}
                 onPress={() => handleAttractionPress(attraction)}
               >
-                <Image
-                  source={{ uri: attraction.image }}
-                  style={styles.attractionImage}
-                  contentFit="cover"
-                />
+                {attraction.image ? (
+                  <Image
+                    source={{ uri: attraction.image }}
+                    style={styles.attractionImage}
+                    contentFit="cover"
+                  />
+                ) : null}
                 <View style={styles.attractionInfo}>
                   <Text
                     style={[

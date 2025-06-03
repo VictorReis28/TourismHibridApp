@@ -45,7 +45,9 @@ CREATE TABLE IF NOT EXISTS attractions (
     category_id INT,
     latitude DECIMAL(10,7) NOT NULL,
     longitude DECIMAL(10,7) NOT NULL,
-    FOREIGN KEY (category_id) REFERENCES categories(id)
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY (category_id) REFERENCES categories(id) ON DELETE SET NULL
 );
 
 -- Tabela de avaliações de atrações (reviews)

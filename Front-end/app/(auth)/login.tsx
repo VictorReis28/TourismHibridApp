@@ -36,8 +36,7 @@ export default function Login() {
   const handleLogin = async () => {
     try {
       setError('');
-      await login(email, password);
-      router.replace('/(app)');
+      await login(email, password, () => router.replace('/(app)'));
     } catch (error: any) {
       setError(error.message || 'Erro ao fazer login');
     }
@@ -46,8 +45,7 @@ export default function Login() {
   const handleBiometricLogin = async () => {
     try {
       setError('');
-      await loginWithBiometrics();
-      router.replace('/(app)');
+      await loginWithBiometrics(() => router.replace('/(app)'));
     } catch (error: any) {
       setError(error.message || 'Erro na autenticação biométrica');
     }

@@ -37,7 +37,7 @@ export async function fetchAttractions(): Promise<Attraction[]> {
       id: a.id,
       name: a.name,
       description: a.description,
-      image: a.image || '',
+      image: a.image || 'https://placehold.co/600x400?text=Sem+Imagem',
       rating: Number(a.rating) || 0,
       reviews: Number(a.reviews) || 0,
       category: a.category || '',
@@ -53,16 +53,25 @@ export async function fetchAttractions(): Promise<Attraction[]> {
 }
 
 export function calculateDistance(
-  userLocation: Location | null,
+  userLocation: { latitude: number; longitude: number } | null,
   attraction: Attraction
 ): number {
-  if (!userLocation) return 0;
+  if (
+    !userLocation ||
+    typeof userLocation.latitude !== 'number' ||
+    typeof userLocation.longitude !== 'number'
+  ) {
+    return 0;
+  }
   const distance = getDistance(
     {
-      latitude: userLocation.coords.latitude,
-      longitude: userLocation.coords.longitude,
+      latitude: userLocation.latitude,
+      longitude: userLocation.longitude,
     },
-    attraction.coordinates
+    {
+      latitude: attraction.coordinates.latitude,
+      longitude: attraction.coordinates.longitude,
+    }
   );
   return Math.round((distance / 1000) * 10) / 10;
 }

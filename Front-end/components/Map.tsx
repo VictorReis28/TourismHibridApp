@@ -110,7 +110,7 @@ export const Map = forwardRef<any, MapProps>(
           initialRegion={initialRegion}
           showsUserLocation={showsUserLocation}
           showsMyLocationButton={true}
-          customMapStyle={isDarkMode ? darkMapStyle : []}
+          customMapStyle={[]} // Sempre mapa claro, independente do tema
         >
           {markers?.map((marker) => (
             <Marker

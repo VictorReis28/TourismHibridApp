@@ -81,11 +81,13 @@ export default function DeleteAttractionsScreen() {
             ]}
             onPress={() => toggleSelection(attraction.id)}
           >
-            <Image
-              source={{ uri: attraction.image }}
-              style={styles.image}
-              contentFit="cover"
-            />
+            {attraction.image ? (
+              <Image
+                source={{ uri: attraction.image }}
+                style={styles.image}
+                contentFit="cover"
+              />
+            ) : null}
             <View style={styles.attractionInfo}>
               <Text
                 style={[styles.attractionName, { color: theme.colors.text }]}

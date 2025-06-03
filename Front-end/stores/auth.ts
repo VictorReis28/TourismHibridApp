@@ -1,6 +1,7 @@
 import { create } from 'zustand';
 import * as LocalAuthentication from 'expo-local-authentication';
 import { Alert, Platform } from 'react-native';
+import { router } from 'expo-router';
 
 interface User {
   id: string;
@@ -13,11 +14,20 @@ interface AuthState {
   isAuthenticated: boolean;
   user: User | null;
   isBiometricsEnabled: boolean;
-  login: (email: string, password: string) => Promise<void>;
-  loginWithBiometrics: () => Promise<void>;
+  login: (
+    email: string,
+    password: string,
+    onSuccess?: () => void
+  ) => Promise<void>;
+  loginWithBiometrics: (onSuccess?: () => void) => Promise<void>;
   logout: () => Promise<void>;
   checkBiometricsAvailable: () => Promise<boolean>;
-  register: (email: string, password: string, name: string) => Promise<void>;
+  register: (
+    email: string,
+    password: string,
+    name: string,
+    onSuccess?: () => void
+  ) => Promise<void>;
   setupBiometrics: () => Promise<void>;
   toggleBiometrics: () => Promise<void>;
   updateUserAvatar: (avatarUri: string) => Promise<void>;
@@ -33,7 +43,7 @@ export const useAuthStore = create<AuthState>((set, get) => ({
   user: null,
   isBiometricsEnabled: false,
 
-  login: async (email: string, password: string) => {
+  login: async (email: string, password: string, onSuccess?: () => void) => {
     try {
       const res = await fetch(`${API_URL}/auth/login`, {
         method: 'POST',
@@ -70,12 +80,18 @@ export const useAuthStore = create<AuthState>((set, get) => ({
           );
         }
       }
+      if (onSuccess) onSuccess();
     } catch (error: any) {
       throw new Error(error.message || 'Falha no login');
     }
   },
 
-  register: async (email: string, password: string, name: string) => {
+  register: async (
+    email: string,
+    password: string,
+    name: string,
+    onSuccess?: () => void
+  ) => {
     try {
       const res = await fetch(`${API_URL}/auth/register`, {
         method: 'POST',
@@ -88,6 +104,7 @@ export const useAuthStore = create<AuthState>((set, get) => ({
       }
       const data = await res.json();
       set({ isAuthenticated: true, user: data.user });
+      if (onSuccess) onSuccess();
     } catch (error: any) {
       throw new Error(error.message || 'Falha no cadastro');
     }
@@ -151,7 +168,7 @@ export const useAuthStore = create<AuthState>((set, get) => ({
     }
   },
 
-  loginWithBiometrics: async () => {
+  loginWithBiometrics: async (onSuccess?: () => void) => {
     try {
       const { user } = get();
       if (!user)
@@ -170,6 +187,7 @@ export const useAuthStore = create<AuthState>((set, get) => ({
       });
       if (biometricAuth.success) {
         set({ isAuthenticated: true, isBiometricsEnabled: true });
+        if (onSuccess) onSuccess();
       } else {
         throw new Error('Autenticação biométrica falhou');
       }

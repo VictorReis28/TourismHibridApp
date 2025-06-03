@@ -27,9 +27,7 @@ export default function Register() {
         setError('Por favor, preencha todos os campos');
         return;
       }
-      // A store já faz chamada à API
-      await register(email, password, name);
-      router.replace('/(app)');
+      await register(email, password, name, () => router.replace('/(app)'));
     } catch (error: any) {
       setError(error.message || 'Erro ao criar conta');
     }

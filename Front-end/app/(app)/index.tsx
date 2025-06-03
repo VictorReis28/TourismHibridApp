@@ -14,7 +14,6 @@ import {
   Search,
   FileSliders as Sliders,
 } from 'lucide-react-native';
-import * as Location from 'expo-location';
 import Animated, {
   FadeInDown,
   FadeOut,
@@ -33,6 +32,8 @@ import {
 } from '@/components/data/attractions';
 import { homeStyles } from '@/styles/screens/app/home.styles';
 import { router } from 'expo-router';
+import { useFocusEffect } from '@react-navigation/native';
+import { useLocationStore } from '@/stores/location';
 
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 
@@ -47,9 +48,7 @@ const DISTANCE_FILTERS = [
 export default function HomeScreen() {
   const isDarkMode = useThemeStore((state) => state.isDarkMode);
   const theme = isDarkMode ? darkTheme : lightTheme;
-  const [location, setLocation] = useState<Location.LocationObject | null>(
-    null
-  );
+  const location = useLocationStore((state) => state.location); // use apenas o valor do store
   const [refreshing, setRefreshing] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState('Todos');
   const [searchQuery, setSearchQuery] = useState('');
@@ -58,23 +57,47 @@ export default function HomeScreen() {
   const [attractions, setAttractions] = useState<Attraction[]>([]);
   const searchBarHeight = useSharedValue(0);
   const searchBarVisible = useSharedValue(false);
+  const initializeLocation = useLocationStore(
+    (state) => state.initializeLocation
+  );
 
   useEffect(() => {
-    (async () => {
-      const { status } = await Location.requestForegroundPermissionsAsync();
-      if (status === 'granted') {
-        const location = await Location.getCurrentPositionAsync({});
-        setLocation(location);
-      }
-    })();
+    initializeLocation();
   }, []);
 
-  useEffect(() => {
-    (async () => {
-      const data = await fetchAttractions();
-      setAttractions(data);
-    })();
-  }, []);
+  // Remova o useEffect que chama Location diretamente e o useState location
+
+  // Adicione um loading enquanto a localização não estiver disponível ou incompleta
+  if (
+    !location ||
+    typeof location.latitude !== 'number' ||
+    typeof location.longitude !== 'number'
+  ) {
+    return (
+      <View
+        style={[
+          homeStyles.container,
+          { justifyContent: 'center', alignItems: 'center' },
+        ]}
+      >
+        <Text style={{ color: theme.colors.text }}>Obtendo localização...</Text>
+      </View>
+    );
+  }
+
+  // Substitua o useEffect de busca de atrações por useFocusEffect para garantir atualização ao entrar na tela
+  useFocusEffect(
+    useCallback(() => {
+      let isActive = true;
+      (async () => {
+        const data = await fetchAttractions();
+        if (isActive) setAttractions(data);
+      })();
+      return () => {
+        isActive = false;
+      };
+    }, [])
+  );
 
   const onRefresh = useCallback(() => {
     setRefreshing(true);
@@ -118,12 +141,14 @@ export default function HomeScreen() {
         exiting={FadeOut}
         onPress={() => router.push(`/attractions/${item.id}`)}
       >
-        <Image
-          source={{ uri: item.image }}
-          style={homeStyles.image}
-          contentFit="cover"
-          transition={1000}
-        />
+        {item.image ? (
+          <Image
+            source={{ uri: item.image }}
+            style={homeStyles.image}
+            contentFit="cover"
+            transition={1000}
+          />
+        ) : null}
         <LinearGradient
           colors={['transparent', 'rgba(0,0,0,0.8)']}
           style={homeStyles.gradient}
