@@ -29,7 +29,6 @@ export default function Login() {
   const insets = useSafeAreaInsets();
 
   useEffect(() => {
-    // Só mostra o botão biométrico se o usuário já fez login antes e biometria está habilitada
     checkBiometricsAvailable().then(setBiometricsAvailable);
   }, [user]);
 
@@ -107,7 +106,6 @@ export default function Login() {
           <Text style={styles.buttonText}>Entrar</Text>
         </TouchableOpacity>
 
-        {/* Botão biométrico só aparece se biometria estiver disponível */}
         {biometricsAvailable && user && (
           <TouchableOpacity
             style={[

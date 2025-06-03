@@ -119,7 +119,7 @@ export default function ProfileScreen() {
         <View
           style={[
             profileStyles.avatarContainer,
-            { borderColor: isDarkMode ? '#FFF' : '#000' }, // Moldura com base no tema
+            { borderColor: isDarkMode ? '#FFF' : '#000' },
           ]}
         >
           <Image
@@ -184,14 +184,6 @@ export default function ProfileScreen() {
         )}
         <MenuItem icon={Key} title="Alterar Senha" onPress={() => {}} />
         <MenuItem icon={Bell} title="Notificações" onPress={() => {}} />
-        {/* 
-        <MenuItem 
-          icon={Globe} 
-          title="Idioma" 
-          value="Português" 
-          onPress={() => {}} 
-        />
-        */}
         <MenuItem
           icon={Settings}
           title="Administração"

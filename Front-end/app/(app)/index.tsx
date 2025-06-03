@@ -48,7 +48,7 @@ const DISTANCE_FILTERS = [
 export default function HomeScreen() {
   const isDarkMode = useThemeStore((state) => state.isDarkMode);
   const theme = isDarkMode ? darkTheme : lightTheme;
-  const location = useLocationStore((state) => state.location); // use apenas o valor do store
+  const location = useLocationStore((state) => state.location);
   const [refreshing, setRefreshing] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState('Todos');
   const [searchQuery, setSearchQuery] = useState('');
@@ -65,9 +65,6 @@ export default function HomeScreen() {
     initializeLocation();
   }, []);
 
-  // Remova o useEffect que chama Location diretamente e o useState location
-
-  // Adicione um loading enquanto a localização não estiver disponível ou incompleta
   if (
     !location ||
     typeof location.latitude !== 'number' ||
@@ -85,7 +82,6 @@ export default function HomeScreen() {
     );
   }
 
-  // Substitua o useEffect de busca de atrações por useFocusEffect para garantir atualização ao entrar na tela
   useFocusEffect(
     useCallback(() => {
       let isActive = true;

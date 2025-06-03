@@ -44,7 +44,6 @@ export default function DeleteAttractionsScreen() {
         body: JSON.stringify({ ids: Array.from(selectedAttractions) }),
       });
       if (!res.ok) throw new Error('Erro ao excluir atrações');
-      // Recarrega a lista após exclusão
       const data = await fetchAttractions();
       setAttractions(data);
       setSelectedAttractions(new Set());

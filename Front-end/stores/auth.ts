@@ -1,7 +1,6 @@
 import { create } from 'zustand';
 import * as LocalAuthentication from 'expo-local-authentication';
 import { Alert, Platform } from 'react-native';
-import { router } from 'expo-router';
 
 interface User {
   id: string;
@@ -31,11 +30,10 @@ interface AuthState {
   setupBiometrics: () => Promise<void>;
   toggleBiometrics: () => Promise<void>;
   updateUserAvatar: (avatarUri: string) => Promise<void>;
-  testConnection: () => Promise<void>; // Função para testar conexão com backend
-  changePassword: (email: string, newPassword: string) => Promise<void>; // Função para alterar senha
+  testConnection: () => Promise<void>;
+  changePassword: (email: string, newPassword: string) => Promise<void>;
 }
 
-// Usa variável de ambiente do .env
 const API_URL = process.env.EXPO_PUBLIC_API_URL || 'http://localhost:3001';
 
 export const useAuthStore = create<AuthState>((set, get) => ({
@@ -229,7 +227,6 @@ export const useAuthStore = create<AuthState>((set, get) => ({
 
   testConnection: async () => {
     try {
-      console.log('Testando conexão com API em:', API_URL);
       const res = await fetch(`${API_URL}/auth/login`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -237,14 +234,10 @@ export const useAuthStore = create<AuthState>((set, get) => ({
       });
       if (!res.ok) {
         const data = await res.json();
-        console.log('Erro da API no teste:', data);
         return;
       }
-      const data = await res.json();
-      console.log('Teste API sucesso:', data);
-    } catch (error: any) {
-      console.log('Erro fetch no teste:', error.message);
-    }
+      await res.json();
+    } catch (error: any) {}
   },
 
   changePassword: async (email: string, newPassword: string) => {

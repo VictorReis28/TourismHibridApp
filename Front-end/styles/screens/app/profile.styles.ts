@@ -18,8 +18,8 @@ export const profileStyles = StyleSheet.create({
   },
   avatarContainer: {
     marginBottom: 16,
-    borderWidth: 4, // Espessura da moldura
-    borderRadius: 64, // Deve ser maior que o raio do avatar
+    borderWidth: 4,
+    borderRadius: 64,
   },
   avatar: {
     width: 120,

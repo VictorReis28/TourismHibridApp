@@ -15,7 +15,6 @@ import { darkTheme, lightTheme } from '@/styles/theme';
 import { router } from 'expo-router';
 import MapView, { Marker } from 'react-native-maps';
 
-// URL base da API
 const API_URL = process.env.EXPO_PUBLIC_API_URL || 'http://localhost:3001';
 
 export default function NewAttraction() {
@@ -87,7 +86,6 @@ export default function NewAttraction() {
       }
       Alert.alert('Sucesso', 'Atração cadastrada com sucesso!');
       router.back();
-      // Opcional: pode emitir um evento ou usar contexto para recarregar lista na tela anterior
     } catch (error) {
       console.error('Erro ao salvar atração:', error);
       Alert.alert('Erro', 'Não foi possível salvar a atração');

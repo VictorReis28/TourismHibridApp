@@ -1,5 +1,4 @@
 import { getDistance } from 'geolib';
-import type { Location } from 'expo-location';
 
 export interface Attraction {
   id: string;
@@ -25,7 +24,6 @@ export const categories = [
   'Arquitetura',
 ];
 
-// Buscar atrações da API com tratamento de erro e dados
 export async function fetchAttractions(): Promise<Attraction[]> {
   const API_URL = process.env.EXPO_PUBLIC_API_URL || 'http://localhost:3001';
   try {

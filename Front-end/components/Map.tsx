@@ -110,7 +110,7 @@ export const Map = forwardRef<any, MapProps>(
           initialRegion={initialRegion}
           showsUserLocation={showsUserLocation}
           showsMyLocationButton={true}
-          customMapStyle={[]} // Sempre mapa claro, independente do tema
+          customMapStyle={[]}
         >
           {markers?.map((marker) => (
             <Marker
@@ -139,27 +139,3 @@ const styles = StyleSheet.create({
     height: '100%',
   },
 });
-
-const darkMapStyle = [
-  {
-    elementType: 'geometry',
-    stylers: [{ color: '#212121' }],
-  },
-  {
-    elementType: 'labels.icon',
-    stylers: [{ visibility: 'off' }],
-  },
-  {
-    elementType: 'labels.text.fill',
-    stylers: [{ color: '#757575' }],
-  },
-  {
-    elementType: 'labels.text.stroke',
-    stylers: [{ color: '#212121' }],
-  },
-  {
-    featureType: 'administrative',
-    elementType: 'geometry',
-    stylers: [{ color: '#757575' }],
-  },
-];

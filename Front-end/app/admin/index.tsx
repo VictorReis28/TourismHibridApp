@@ -11,7 +11,7 @@ export default function AdminScreen() {
   const isDarkMode = useThemeStore((state) => state.isDarkMode);
   const theme = isDarkMode ? darkTheme : lightTheme;
 
-  const setLocation = useLocationStore((state) => state.setLocation); // Função para atualizar a localização no store
+  const setLocation = useLocationStore((state) => state.setLocation);
 
   useEffect(() => {
     const preloadLocation = async () => {
