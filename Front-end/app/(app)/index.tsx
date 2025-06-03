@@ -26,7 +26,6 @@ import { useThemeStore } from '@/stores/theme';
 import { darkTheme, lightTheme } from '@/styles/theme';
 import {
   fetchAttractions,
-  categories,
   calculateDistance,
   type Attraction,
 } from '@/components/data/attractions';
@@ -55,6 +54,7 @@ export default function HomeScreen() {
   const [showFilters, setShowFilters] = useState(false);
   const [selectedDistance, setSelectedDistance] = useState<number | null>(null);
   const [attractions, setAttractions] = useState<Attraction[]>([]);
+  const [categories, setCategories] = useState<string[]>(['Todos']);
   const searchBarHeight = useSharedValue(0);
   const searchBarVisible = useSharedValue(false);
   const initializeLocation = useLocationStore(
@@ -63,6 +63,26 @@ export default function HomeScreen() {
 
   useEffect(() => {
     initializeLocation();
+  }, []);
+
+  useEffect(() => {
+    async function fetchCategories() {
+      try {
+        const API_URL =
+          process.env.EXPO_PUBLIC_API_URL || 'http://localhost:3001';
+        const res = await fetch(`${API_URL}/categories`);
+        if (!res.ok) throw new Error('Erro ao buscar categorias');
+        const data = await res.json();
+        // Remover "Todos" do banco (case-insensitive) e adicionar apenas um "Todos" no início
+        const categoryNames = data
+          .map((cat: any) => cat.name)
+          .filter((name: string) => name.toLowerCase() !== 'todos');
+        setCategories(['Todos', ...categoryNames]);
+      } catch (err) {
+        setCategories(['Todos']);
+      }
+    }
+    fetchCategories();
   }, []);
 
   if (

@@ -161,6 +161,12 @@ async function main() {
     return reply.send({ success: true });
   });
 
+  // Adicionar rota GET para listar categorias
+  fastify.get("/categories", async (req, reply) => {
+    const [rows] = await db.query("SELECT id, name FROM categories");
+    return reply.send(rows);
+  });
+
   // --- Teste de conexão ---
   fastify.get("/ping", async (req, reply) => {
     return reply.send({ message: "pong" });
