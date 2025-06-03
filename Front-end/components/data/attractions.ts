@@ -35,7 +35,11 @@ export async function fetchAttractions(): Promise<Attraction[]> {
       id: a.id,
       name: a.name,
       description: a.description,
-      image: a.image || 'https://placehold.co/600x400?text=Sem+Imagem',
+      image: a.image
+        ? a.image.startsWith('http')
+          ? a.image
+          : `${API_URL.replace(/\/$/, '')}/${a.image.replace(/^\/?/, '')}`
+        : 'https://placehold.co/600x400?text=Sem+Imagem',
       rating: Number(a.rating) || 0,
       reviews: Number(a.reviews) || 0,
       category: a.category || '',

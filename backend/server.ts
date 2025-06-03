@@ -5,6 +5,10 @@ import mysql from "mysql2/promise";
 import bcrypt from "bcryptjs";
 import { randomUUID } from "crypto";
 import { URL } from "url";
+import multipart from "@fastify/multipart";
+import fs from "fs";
+import path from "path";
+import fastifyStatic from "@fastify/static"; // ADICIONE ESTA LINHA
 
 require("dotenv").config({ path: __dirname + "/../Backend/.env" }); // Caminho absoluto para o .env do backend
 
@@ -12,6 +16,21 @@ async function main() {
   const fastify = Fastify();
   await fastify.register(cors, {
     origin: true, // ou especifique o domínio do seu front-end
+  });
+
+  // Adiciona suporte a multipart/form-data
+  await fastify.register(multipart);
+
+  // Garante que a pasta Photos existe dentro de Backend
+  const photosDir = path.join(__dirname, "Photos");
+  if (!fs.existsSync(photosDir)) {
+    fs.mkdirSync(photosDir, { recursive: true });
+  }
+
+  // Servir arquivos estáticos da pasta Photos via HTTP
+  await fastify.register(fastifyStatic, {
+    root: photosDir,
+    prefix: "/Photos/", // URL base para acessar as imagens
   });
 
   const db = await mysql.createPool({
@@ -165,6 +184,28 @@ async function main() {
   fastify.get("/categories", async (req, reply) => {
     const [rows] = await db.query("SELECT id, name FROM categories");
     return reply.send(rows);
+  });
+
+  // Rota para upload de fotos
+  fastify.post("/photos", async (req, reply) => {
+    const data = await req.file();
+    if (!data) {
+      return reply.status(400).send({ message: "Arquivo não enviado" });
+    }
+    const ext = path.extname(data.filename) || ".jpg";
+    const filename = `${randomUUID()}${ext}`;
+    const filepath = path.join(photosDir, filename);
+
+    // Salva o arquivo na pasta Photos
+    await new Promise((resolve, reject) => {
+      const ws = fs.createWriteStream(filepath);
+      data.file.pipe(ws);
+      ws.on("finish", resolve);
+      ws.on("error", reject);
+    });
+
+    // Retorna o caminho relativo para ser salvo no banco e usado no frontend
+    return reply.send({ path: `Photos/${filename}` });
   });
 
   // --- Teste de conexão ---

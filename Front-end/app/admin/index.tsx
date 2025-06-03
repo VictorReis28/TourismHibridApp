@@ -4,7 +4,11 @@ import { router } from 'expo-router';
 import { useThemeStore } from '@/stores/theme';
 import { useLocationStore } from '@/stores/location';
 import { darkTheme, lightTheme } from '@/styles/theme';
-import { CirclePlus as PlusCircle, Trash2 } from 'lucide-react-native';
+import {
+  CirclePlus as PlusCircle,
+  Trash2,
+  ArrowLeft,
+} from 'lucide-react-native';
 import * as Location from 'expo-location';
 
 export default function AdminScreen() {
@@ -43,13 +47,24 @@ export default function AdminScreen() {
       style={[styles.container, { backgroundColor: theme.colors.background }]}
     >
       <View style={styles.header}>
+        <TouchableOpacity
+          onPress={() => router.back()}
+          style={{ marginRight: 12 }}
+        >
+          <ArrowLeft size={28} color={theme.colors.text} />
+        </TouchableOpacity>
         <Text style={[styles.title, { color: theme.colors.text }]}>
           Administração
         </Text>
-        <Text style={[styles.subtitle, { color: theme.colors.textSecondary }]}>
-          Gerencie as atrações turísticas
-        </Text>
       </View>
+      <Text
+        style={[
+          styles.subtitle,
+          { color: theme.colors.textSecondary, marginLeft: 52 },
+        ]}
+      >
+        Gerencie as atrações turísticas
+      </Text>
 
       <View style={styles.content}>
         <TouchableOpacity
@@ -77,6 +92,8 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   header: {
+    flexDirection: 'row', // adicionado para alinhar seta e título
+    alignItems: 'center', // centralizar verticalmente
     padding: 20,
     paddingTop: 60,
   },
@@ -88,6 +105,7 @@ const styles = StyleSheet.create({
   subtitle: {
     fontSize: 16,
     fontFamily: 'Inter_400Regular',
+    // marginLeft: 52, // já adicionado no componente
   },
   content: {
     padding: 20,
