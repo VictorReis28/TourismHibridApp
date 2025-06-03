@@ -45,7 +45,7 @@ export default function ProfileScreen() {
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
       allowsEditing: true,
       aspect: [1, 1],
-      quality: 1,
+      quality: 0.5,
     });
 
     if (!result.canceled) {
@@ -58,7 +58,7 @@ export default function ProfileScreen() {
     const result = await ImagePicker.launchCameraAsync({
       allowsEditing: true,
       aspect: [1, 1],
-      quality: 1,
+      quality: 0.5,
     });
 
     if (!result.canceled) {
@@ -137,7 +137,14 @@ export default function ProfileScreen() {
             <Image
               source={
                 user?.avatar
-                  ? { uri: user.avatar }
+                  ? user.avatar.startsWith('http')
+                    ? { uri: user.avatar }
+                    : {
+                        uri: `${
+                          process.env.EXPO_PUBLIC_API_URL ||
+                          'http://localhost:3001'
+                        }/${user.avatar.replace(/^\/?/, '')}`,
+                      }
                   : require('@/assets/images/user-profile.png')
               }
               style={profileStyles.avatar}

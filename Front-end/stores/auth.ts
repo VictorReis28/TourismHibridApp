@@ -198,13 +198,23 @@ export const useAuthStore = create<AuthState>((set, get) => ({
     try {
       const { user } = get();
       if (!user) throw new Error('Usuário não encontrado');
-      const res = await fetch(`${API_URL}/users/${user.id}/avatar`, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ avatar: avatarUri }),
+      // Envia via multipart para o backend
+      const formData = new FormData();
+      formData.append('photo', {
+        uri: avatarUri,
+        name: 'profile.jpg',
+        type: 'image/jpeg',
+      } as any);
+      const res = await fetch(`${API_URL}/users/${user.id}/profile-picture`, {
+        method: 'POST',
+        body: formData,
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
       });
       if (!res.ok) throw new Error('Falha ao atualizar avatar');
-      set({ user: { ...user, avatar: avatarUri } });
+      const data = await res.json();
+      set({ user: { ...user, avatar: data.avatar } });
     } catch (error: any) {
       throw new Error('Falha ao atualizar avatar');
     }

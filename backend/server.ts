@@ -27,10 +27,23 @@ async function main() {
     fs.mkdirSync(photosDir, { recursive: true });
   }
 
+  // Garante que a pasta ProfilePictures existe dentro de Backend
+  const profilePicsDir = path.join(__dirname, "ProfilePictures");
+  if (!fs.existsSync(profilePicsDir)) {
+    fs.mkdirSync(profilePicsDir, { recursive: true });
+  }
+
   // Servir arquivos estáticos da pasta Photos via HTTP
   await fastify.register(fastifyStatic, {
     root: photosDir,
     prefix: "/Photos/", // URL base para acessar as imagens
+  });
+
+  // Servir arquivos estáticos da pasta ProfilePictures via HTTP
+  await fastify.register(fastifyStatic, {
+    root: profilePicsDir,
+    prefix: "/ProfilePictures/",
+    decorateReply: false,
   });
 
   const db = await mysql.createPool({
@@ -126,6 +139,34 @@ async function main() {
     const { avatar } = req.body as any;
     await db.query("UPDATE users SET avatar = ? WHERE id = ?", [avatar, id]);
     return reply.send({ success: true });
+  });
+
+  // --- Avatar (upload de foto de perfil via multipart) ---
+  fastify.post("/users/:id/profile-picture", async (req, reply) => {
+    const { id } = req.params as any;
+    const data = await req.file();
+    if (!data) {
+      return reply.status(400).send({ message: "Arquivo não enviado" });
+    }
+    const ext = path.extname(data.filename) || ".jpg";
+    const filename = `${id}_${Date.now()}${ext}`;
+    const filepath = path.join(profilePicsDir, filename);
+
+    // Salva o arquivo na pasta ProfilePictures
+    await new Promise((resolve, reject) => {
+      const ws = fs.createWriteStream(filepath);
+      data.file.pipe(ws);
+      ws.on("finish", resolve);
+      ws.on("error", reject);
+    });
+
+    // Atualiza o campo avatar do usuário para o caminho relativo
+    const avatarPath = `ProfilePictures/${filename}`;
+    await db.query("UPDATE users SET avatar = ? WHERE id = ?", [
+      avatarPath,
+      id,
+    ]);
+    return reply.send({ avatar: avatarPath });
   });
 
   // --- Atrações ---
