@@ -219,6 +219,35 @@ export default function MapScreen() {
                         {attraction.rating}
                       </Text>
                     </View>
+                    {/* Categoria como botão para detalhes */}
+                    <Pressable
+                      onPress={() =>
+                        router.push(`/attractions/${attraction.id}`)
+                      }
+                      style={{ marginRight: 8 }}
+                    >
+                      <View
+                        style={{
+                          backgroundColor: theme.colors.card,
+                          paddingHorizontal: 10,
+                          paddingVertical: 4,
+                          borderRadius: 8,
+                          marginBottom: 2,
+                          borderWidth: 1,
+                          borderColor: theme.colors.border,
+                        }}
+                      >
+                        <Text
+                          style={{
+                            color: theme.colors.primary,
+                            fontFamily: 'Inter_600SemiBold',
+                            fontSize: 13,
+                          }}
+                        >
+                          {attraction.category}
+                        </Text>
+                      </View>
+                    </Pressable>
                     <View style={styles.distance}>
                       <Navigation
                         size={16}

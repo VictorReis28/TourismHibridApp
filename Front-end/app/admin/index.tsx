@@ -92,8 +92,8 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   header: {
-    flexDirection: 'row', // adicionado para alinhar seta e título
-    alignItems: 'center', // centralizar verticalmente
+    flexDirection: 'row',
+    alignItems: 'center',
     padding: 20,
     paddingTop: 60,
   },
@@ -105,7 +105,6 @@ const styles = StyleSheet.create({
   subtitle: {
     fontSize: 16,
     fontFamily: 'Inter_400Regular',
-    // marginLeft: 52, // já adicionado no componente
   },
   content: {
     padding: 20,

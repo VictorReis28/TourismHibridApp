@@ -121,7 +121,7 @@ export default function ForgotPassword() {
 
         <TouchableOpacity onPress={() => router.back()}>
           <Text style={[styles.link, { color: theme.colors.primary }]}>
-            Voltar para login
+            Voltar
           </Text>
         </TouchableOpacity>
       </View>

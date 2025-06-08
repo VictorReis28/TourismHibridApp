@@ -11,7 +11,7 @@ import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useThemeStore } from '@/stores/theme';
 import { darkTheme, lightTheme } from '@/styles/theme';
 import { Image } from 'expo-image';
-import { Star, ArrowLeft } from 'lucide-react-native';
+import { Star, StarHalf, ArrowLeft } from 'lucide-react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 const API_URL = process.env.EXPO_PUBLIC_API_URL || 'http://localhost:3001';
@@ -59,11 +59,68 @@ export default function AttractionDetailScreen() {
     setSubmitting(false);
   };
 
-  // Função para garantir URL absoluta para imagens relativas
   function getImageUrl(image: string) {
     if (!image) return undefined;
     if (image.startsWith('http')) return image;
     return `${API_URL.replace(/\/$/, '')}/${image.replace(/^\/?/, '')}`;
+  }
+
+  function renderStars(rating: number) {
+    const stars = [];
+    const fullStars = Math.floor(rating);
+    const hasHalf = rating - fullStars >= 0.25 && rating - fullStars < 0.75;
+    for (let i = 1; i <= 5; i++) {
+      if (i <= fullStars) {
+        stars.push(
+          <TouchableOpacity
+            key={i}
+            onPress={() => handleRate(i)}
+            disabled={submitting}
+            activeOpacity={0.7}
+          >
+            <Star
+              size={32}
+              color="#FFD700"
+              fill="#FFD700"
+              style={{ marginHorizontal: 2 }}
+            />
+          </TouchableOpacity>
+        );
+      } else if (i === fullStars + 1 && hasHalf) {
+        stars.push(
+          <TouchableOpacity
+            key={i}
+            onPress={() => handleRate(i - 0.5)}
+            disabled={submitting}
+            activeOpacity={0.7}
+          >
+            <StarHalf
+              size={32}
+              color="#FFD700"
+              fill="#FFD700"
+              style={{ marginHorizontal: 2 }}
+            />
+          </TouchableOpacity>
+        );
+      } else {
+        stars.push(
+          <TouchableOpacity
+            key={i}
+            onPress={() => handleRate(i)}
+            disabled={submitting}
+            activeOpacity={0.7}
+          >
+            <Star
+              size={32}
+              color={theme.colors.textSecondary}
+              fill="none"
+              style={{ marginHorizontal: 2 }}
+            />
+          </TouchableOpacity>
+        );
+      }
+    }
+    return stars;
   }
 
   if (!attraction) {
@@ -115,29 +172,7 @@ export default function AttractionDetailScreen() {
             {attraction.description}
           </Text>
           <View style={styles.starsRow}>
-            {[1, 2, 3, 4, 5].map((star) => (
-              <TouchableOpacity
-                key={star}
-                onPress={() => handleRate(star)}
-                disabled={submitting}
-                activeOpacity={0.7}
-              >
-                <Star
-                  size={32}
-                  color={
-                    star <= (userRating || Math.round(attraction.rating))
-                      ? '#FFD700'
-                      : theme.colors.textSecondary
-                  }
-                  fill={
-                    star <= (userRating || Math.round(attraction.rating))
-                      ? '#FFD700'
-                      : 'none'
-                  }
-                  style={{ marginHorizontal: 2 }}
-                />
-              </TouchableOpacity>
-            ))}
+            {renderStars(userRating || Number(attraction.rating))}
             <Text
               style={[
                 styles.ratingText,

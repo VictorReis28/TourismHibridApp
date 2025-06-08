@@ -6,7 +6,7 @@ import {
   RefreshControl,
   Pressable,
   TextInput,
-  TouchableOpacity, // <-- Adicionado aqui
+  TouchableOpacity,
 } from 'react-native';
 import { Image } from 'expo-image';
 import {
@@ -74,7 +74,6 @@ export default function HomeScreen() {
         const res = await fetch(`${API_URL}/categories`);
         if (!res.ok) throw new Error('Erro ao buscar categorias');
         const data = await res.json();
-        // Remover "Todos" do banco (case-insensitive) e adicionar apenas um "Todos" no início
         const categoryNames = data
           .map((cat: any) => cat.name)
           .filter((name: string) => name.toLowerCase() !== 'todos');
@@ -171,9 +170,6 @@ export default function HomeScreen() {
           style={homeStyles.gradient}
         />
         <View style={homeStyles.cardContent}>
-          <View style={homeStyles.categoryBadge}>
-            <Text style={homeStyles.categoryText}>{item.category}</Text>
-          </View>
           <Text style={homeStyles.name}>{item.name}</Text>
           <Text style={homeStyles.description} numberOfLines={2}>
             {item.description}
@@ -186,9 +182,14 @@ export default function HomeScreen() {
                 ({item.reviews.toLocaleString()} avaliações)
               </Text>
             </View>
-            <View style={homeStyles.distance}>
-              <Navigation size={16} color="#fff" />
-              <Text style={homeStyles.distanceText}>{distance} km</Text>
+            <View style={{ alignItems: 'flex-end' }}>
+              <View style={homeStyles.categoryBadge}>
+                <Text style={homeStyles.categoryText}>{item.category}</Text>
+              </View>
+              <View style={homeStyles.distance}>
+                <Navigation size={16} color="#fff" />
+                <Text style={homeStyles.distanceText}>{distance} km</Text>
+              </View>
             </View>
           </View>
         </View>

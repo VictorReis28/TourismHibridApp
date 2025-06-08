@@ -35,7 +35,6 @@ export default function NewAttraction() {
         const res = await fetch(`${API_URL}/categories`);
         if (!res.ok) throw new Error('Erro ao buscar categorias');
         const data = await res.json();
-        // Remover "Todos" e garantir unicidade
         const categoryNames = data
           .map((cat: any) => cat.name)
           .filter((name: string) => name.toLowerCase() !== 'todos');
@@ -237,7 +236,6 @@ export default function NewAttraction() {
           }
         />
 
-        {/* Seletor customizado de categoria */}
         <TouchableOpacity
           style={[
             styles.input,
@@ -319,7 +317,6 @@ export default function NewAttraction() {
           </View>
         </Modal>
 
-        {/* Campo de seleção de imagem */}
         <TouchableOpacity
           style={[
             styles.input,

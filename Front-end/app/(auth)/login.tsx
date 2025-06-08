@@ -7,6 +7,7 @@ import {
   StyleSheet,
   Platform,
   KeyboardAvoidingView,
+  Image,
 } from 'react-native';
 import { router } from 'expo-router';
 import { useAuthStore } from '@/stores/auth';
@@ -55,8 +56,14 @@ export default function Login() {
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
       style={[styles.container, { backgroundColor: theme.colors.background }]}
     >
+      <View style={{ alignItems: 'center', marginBottom: 24 }}>
+        <Image
+          source={require('@/assets/images/icon.png')}
+          style={{ width: 150, height: 150, resizeMode: 'contain' }}
+        />
+      </View>
       <Text style={[styles.title, { color: theme.colors.text }]}>
-        Bem-vindo de Volta
+        Bem-vindo
       </Text>
       <Text style={[styles.subtitle, { color: theme.colors.textSecondary }]}>
         Entre para continuar explorando

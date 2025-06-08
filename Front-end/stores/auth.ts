@@ -198,7 +198,6 @@ export const useAuthStore = create<AuthState>((set, get) => ({
     try {
       const { user } = get();
       if (!user) throw new Error('Usuário não encontrado');
-      // Envia via multipart para o backend
       const formData = new FormData();
       formData.append('photo', {
         uri: avatarUri,

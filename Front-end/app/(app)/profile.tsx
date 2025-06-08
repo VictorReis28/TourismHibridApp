@@ -201,7 +201,11 @@ export default function ProfileScreen() {
               value={isBiometricsEnabled ? 'Ativado' : 'Desativado'}
             />
           )}
-          <MenuItem icon={Key} title="Alterar Senha" onPress={() => {}} />
+          <MenuItem
+            icon={Key}
+            title="Alterar Senha"
+            onPress={() => router.push('/(auth)/forgot-password')}
+          />
           <MenuItem icon={Bell} title="Notificações" onPress={() => {}} />
           <MenuItem
             icon={Settings}
