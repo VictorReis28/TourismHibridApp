@@ -200,6 +200,27 @@ async function main() {
     return reply.send({ id });
   });
 
+  fastify.patch("/attractions/:id", async (req, reply) => {
+    const { id } = req.params as any;
+    const { name, description, category, image, latitude, longitude } =
+      req.body as any;
+    if (!name || !description || !category || !latitude || !longitude)
+      return reply.status(400).send({ message: "Campos obrigatórios" });
+    // Buscar id da categoria
+    const [catRows] = await db.query(
+      "SELECT id FROM categories WHERE name = ?",
+      [category]
+    );
+    const category_id = (catRows as any[])[0]?.id;
+    if (!category_id)
+      return reply.status(400).send({ message: "Categoria inválida" });
+    await db.query(
+      "UPDATE attractions SET name = ?, description = ?, image = ?, category_id = ?, latitude = ?, longitude = ? WHERE id = ?",
+      [name, description, image, category_id, latitude, longitude, id]
+    );
+    return reply.send({ success: true });
+  });
+
   fastify.delete("/attractions", async (req, reply) => {
     const { ids } = req.body as any;
     if (!Array.isArray(ids) || ids.length === 0)

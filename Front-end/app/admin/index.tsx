@@ -7,6 +7,7 @@ import { darkTheme, lightTheme } from '@/styles/theme';
 import {
   CirclePlus as PlusCircle,
   Trash2,
+  Pencil,
   ArrowLeft,
 } from 'lucide-react-native';
 import * as Location from 'expo-location';
@@ -73,6 +74,17 @@ export default function AdminScreen() {
         >
           <PlusCircle size={24} color="#FFF" />
           <Text style={styles.buttonText}>Adicionar Atração</Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity
+          style={[
+            styles.button,
+            { backgroundColor: theme.colors.primary + 'CC' }, // Usando primary com opacidade
+          ]}
+          onPress={() => router.push('/admin/select-edit-attraction')}
+        >
+          <Pencil size={24} color="#FFF" />
+          <Text style={styles.buttonText}>Editar Atração</Text>
         </TouchableOpacity>
 
         <TouchableOpacity
