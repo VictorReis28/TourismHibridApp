@@ -17,10 +17,12 @@ import {
 } from '@/components/data/attractions';
 import { mapStyles as styles } from '@/styles/screens/app/map.styles';
 import { useLocationStore } from '@/stores/location';
+import { useRouter } from 'expo-router';
 
 const { height } = Dimensions.get('window');
 
 export default function MapScreen() {
+  const router = useRouter();
   const isDarkMode = useThemeStore((state) => state.isDarkMode);
   const theme = isDarkMode ? darkTheme : lightTheme;
   const [attractions, setAttractions] = useState([]);
@@ -68,6 +70,8 @@ export default function MapScreen() {
       latitudeDelta: 0.01,
       longitudeDelta: 0.01,
     });
+    // Navegar para detalhes
+    router.push(`/attractions/${attraction.id}`);
   };
 
   const bottomSheetStyle = useAnimatedStyle(() => ({

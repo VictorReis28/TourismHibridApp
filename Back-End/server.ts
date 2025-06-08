@@ -8,9 +8,9 @@ import { URL } from "url";
 import multipart from "@fastify/multipart";
 import fs from "fs";
 import path from "path";
-import fastifyStatic from "@fastify/static"; // ADICIONE ESTA LINHA
+import fastifyStatic from "@fastify/static";
 
-require("dotenv").config({ path: __dirname + "/../Backend/.env" }); // Caminho absoluto para o .env do backend
+require("dotenv").config({ path: __dirname + "/../Back-End/.env" }); // Caminho absoluto para o .env do backend
 
 async function main() {
   const fastify = Fastify();
@@ -206,6 +206,33 @@ async function main() {
       return reply.status(400).send({ message: "IDs obrigatórios" });
     await db.query("DELETE FROM attractions WHERE id IN (?)", [ids]);
     return reply.send({ success: true });
+  });
+
+  // Nova rota: atualizar avaliação
+  fastify.patch("/attractions/:id/rating", async (req, reply) => {
+    const { id } = req.params as any;
+    const { rating } = req.body as any;
+    if (!rating || rating < 1 || rating > 5) {
+      return reply.status(400).send({ message: "Nota inválida" });
+    }
+    // Busca atual
+    const [rows] = await db.query(
+      "SELECT rating, reviews FROM attractions WHERE id = ?",
+      [id]
+    );
+    const current = (rows as any[])[0];
+    if (!current)
+      return reply.status(404).send({ message: "Atração não encontrada" });
+    // Média ponderada
+    const newReviews = Number(current.reviews) + 1;
+    const newRating =
+      (Number(current.rating) * Number(current.reviews) + Number(rating)) /
+      newReviews;
+    await db.query(
+      "UPDATE attractions SET rating = ?, reviews = ? WHERE id = ?",
+      [newRating, newReviews, id]
+    );
+    return reply.send({ rating: newRating, reviews: newReviews });
   });
 
   // --- Categorias ---
