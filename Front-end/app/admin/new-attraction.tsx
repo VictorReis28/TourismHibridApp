@@ -18,6 +18,7 @@ import { router } from 'expo-router';
 import MapView, { Marker } from 'react-native-maps';
 import * as ImagePicker from 'expo-image-picker';
 import { Image } from 'expo-image';
+import { ArrowLeft } from 'lucide-react-native';
 
 const API_URL = process.env.EXPO_PUBLIC_API_URL || 'http://localhost:3001';
 
@@ -162,9 +163,9 @@ export default function NewAttraction() {
     <View
       style={[styles.container, { backgroundColor: theme.colors.background }]}
     >
-      <View style={styles.header}>
-        <TouchableOpacity onPress={() => router.back()}>
-          <Text style={{ color: theme.colors.text }}>Voltar</Text>
+      <View style={[styles.header, { marginBottom: 24 }]}>
+        <TouchableOpacity onPress={() => router.back()} style={{ marginRight: 12 }}>
+          <ArrowLeft size={28} color={theme.colors.text} />
         </TouchableOpacity>
         <Text style={[styles.title, { color: theme.colors.text }]}>
           Nova Atração
@@ -369,10 +370,12 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     padding: 20,
     paddingTop: 60,
+    marginBottom: 24,
   },
   title: {
     fontSize: 24,
     fontWeight: 'bold',
+    marginTop: 12,
   },
   form: {
     padding: 20,

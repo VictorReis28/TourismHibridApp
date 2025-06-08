@@ -5,6 +5,7 @@ import {
   TextInput,
   TouchableOpacity,
   StyleSheet,
+  Image,
 } from 'react-native';
 import { router } from 'expo-router';
 import { useAuthStore } from '@/stores/auth';
@@ -37,6 +38,12 @@ export default function Register() {
     <View
       style={[styles.container, { backgroundColor: theme.colors.background }]}
     >
+      <View style={{ alignItems: 'center', marginBottom: 24 }}>
+        <Image
+          source={require('@/assets/images/icon.png')}
+          style={{ width: 150, height: 150, resizeMode: 'contain' }}
+        />
+      </View>
       <Text style={[styles.title, { color: theme.colors.text }]}>
         Criar Conta
       </Text>

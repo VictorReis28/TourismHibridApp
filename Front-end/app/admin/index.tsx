@@ -96,6 +96,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     padding: 20,
     paddingTop: 60,
+    marginBottom: 24, // Adiciona espaçamento abaixo do header
   },
   title: {
     fontSize: 32,
