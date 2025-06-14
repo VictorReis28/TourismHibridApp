@@ -14,7 +14,7 @@ import { Image } from 'expo-image';
 import { Star, StarHalf, ArrowLeft } from 'lucide-react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
-const API_URL = process.env.EXPO_PUBLIC_API_URL || 'http://localhost:3001';
+const API_URL = process.env.EXPO_PUBLIC_API_URL;
 
 export default function AttractionDetailScreen() {
   const { id } = useLocalSearchParams();

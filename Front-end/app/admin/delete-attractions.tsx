@@ -36,7 +36,7 @@ export default function DeleteAttractionsScreen() {
   }, []);
 
   const handleDelete = async () => {
-    const API_URL = process.env.EXPO_PUBLIC_API_URL || 'http://localhost:3001';
+    const API_URL = process.env.EXPO_PUBLIC_API_URL;
     try {
       const res = await fetch(`${API_URL}/attractions`, {
         method: 'DELETE',

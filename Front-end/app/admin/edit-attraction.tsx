@@ -21,7 +21,7 @@ import { ArrowLeft } from 'lucide-react-native';
 import { fetchAttractions } from '@/components/data/attractions';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
-const API_URL = process.env.EXPO_PUBLIC_API_URL || 'http://localhost:3001';
+const API_URL = process.env.EXPO_PUBLIC_API_URL;
 
 export default function EditAttraction() {
   const { id } = useLocalSearchParams();

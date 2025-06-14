@@ -128,49 +128,48 @@ export default function ProfileScreen() {
         </View>
 
         <View style={profileStyles.profileSection}>
-          <View
+            <View
             style={[
               profileStyles.avatarContainer,
               { borderColor: isDarkMode ? '#FFF' : '#000' },
             ]}
-          >
+            >
             <Image
               source={
-                user?.avatar
-                  ? user.avatar.startsWith('http')
-                    ? { uri: user.avatar }
-                    : {
-                        uri: `${
-                          process.env.EXPO_PUBLIC_API_URL ||
-                          'http://localhost:3001'
-                        }/${user.avatar.replace(/^\/?/, '')}`,
-                      }
-                  : require('@/assets/images/user-profile.png')
+              user?.avatar
+                ? user.avatar.startsWith('http')
+                ? { uri: user.avatar }
+                : {
+                  uri: `${
+                    process.env.EXPO_PUBLIC_API_URL
+                  }/${user.avatar.replace(/^\/?/, '')}`,
+                  }
+                : require('@/assets/images/user-profile.png')
               }
               style={profileStyles.avatar}
               contentFit="cover"
             />
             <View style={profileStyles.photoButtons}>
               <TouchableOpacity
-                style={[
-                  profileStyles.photoButton,
-                  { backgroundColor: theme.colors.primary },
-                ]}
-                onPress={takePhoto}
+              style={[
+                profileStyles.photoButton,
+                { backgroundColor: theme.colors.primary },
+              ]}
+              onPress={takePhoto}
               >
-                <Camera size={20} color="#FFF" />
+              <Camera size={20} color="#FFF" />
               </TouchableOpacity>
               <TouchableOpacity
-                style={[
-                  profileStyles.photoButton,
-                  { backgroundColor: theme.colors.primary },
-                ]}
-                onPress={pickImage}
+              style={[
+                profileStyles.photoButton,
+                { backgroundColor: theme.colors.primary },
+              ]}
+              onPress={pickImage}
               >
-                <Text style={profileStyles.photoButtonText}>+</Text>
+              <Text style={profileStyles.photoButtonText}>+</Text>
               </TouchableOpacity>
             </View>
-          </View>
+            </View>
           <Text style={[profileStyles.name, { color: theme.colors.text }]}>
             {user?.name || 'Usuário'}
           </Text>

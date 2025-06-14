@@ -20,7 +20,7 @@ import * as ImagePicker from 'expo-image-picker';
 import { Image } from 'expo-image';
 import { ArrowLeft } from 'lucide-react-native';
 
-const API_URL = process.env.EXPO_PUBLIC_API_URL || 'http://localhost:3001';
+const API_URL = process.env.EXPO_PUBLIC_API_URL;
 
 export default function NewAttraction() {
   const isDarkMode = useThemeStore((state) => state.isDarkMode);
@@ -160,8 +160,11 @@ export default function NewAttraction() {
   };
 
   return (
-    <View
+    <ScrollView
       style={[styles.container, { backgroundColor: theme.colors.background }]}
+      contentContainerStyle={{ paddingBottom: 32 }}
+      showsVerticalScrollIndicator={false}
+      keyboardShouldPersistTaps="handled"
     >
       <View style={[styles.header, { marginBottom: 24 }]}>
         <TouchableOpacity
@@ -175,12 +178,7 @@ export default function NewAttraction() {
         </Text>
       </View>
 
-      <ScrollView
-        style={styles.form}
-        contentContainerStyle={{ paddingBottom: 32 }}
-        showsVerticalScrollIndicator={false}
-        keyboardShouldPersistTaps="handled"
-      >
+      <View style={styles.form}>
         <View style={styles.mapContainer}>
           <MapView
             style={styles.map}
@@ -364,8 +362,8 @@ export default function NewAttraction() {
         >
           <Text style={styles.submitButtonText}>Cadastrar Atração</Text>
         </TouchableOpacity>
-      </ScrollView>
-    </View>
+      </View>
+    </ScrollView>
   );
 }
 
