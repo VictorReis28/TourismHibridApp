@@ -34,7 +34,7 @@ interface AuthState {
   changePassword: (email: string, newPassword: string) => Promise<void>;
 }
 
-const API_URL = process.env.EXPO_PUBLIC_API_URL || 'http://localhost:3001';
+const API_URL = process.env.EXPO_PUBLIC_API_URL;
 
 export const useAuthStore = create<AuthState>((set, get) => ({
   isAuthenticated: false,

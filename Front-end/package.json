@@ -4,12 +4,11 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "dev": "EXPO_NO_TELEMETRY=1 expo start",
+    "dev": "concurrently \"npm run dev:backend\" \"npm run dev:frontend\"",
     "build:web": "expo export --platform web",
     "lint": "expo lint",
     "dev:backend": "cd backend && npx tsx server.ts",
-    "dev:frontend": "cd frontend && npx expo start",
-    "dev": "concurrently \"npm run dev:backend\" \"npm run dev:frontend\""
+    "dev:frontend": "cd frontend && npx expo start"
   },
   "dependencies": {
     "@expo-google-fonts/inter": "^0.2.3",
@@ -58,8 +57,9 @@
   },
   "devDependencies": {
     "@babel/core": "^7.25.2",
-    "@types/react": "~18.3.12",
-    "typescript": "^5.3.3",
-    "concurrently": "^8.2.0"
+    "@types/react": "^18.0.0",
+    "concurrently": "^8.2.0",
+    "rimraf": "^4.0.0",
+    "typescript": "^5.3.3"
   }
 }

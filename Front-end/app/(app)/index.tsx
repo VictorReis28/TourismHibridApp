@@ -69,8 +69,7 @@ export default function HomeScreen() {
   useEffect(() => {
     async function fetchCategories() {
       try {
-        const API_URL =
-          process.env.EXPO_PUBLIC_API_URL || 'http://localhost:3001';
+        const API_URL = process.env.EXPO_PUBLIC_API_URL;
         const res = await fetch(`${API_URL}/categories`);
         if (!res.ok) throw new Error('Erro ao buscar categorias');
         const data = await res.json();

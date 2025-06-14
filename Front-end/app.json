@@ -9,18 +9,20 @@
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "infoPlist": {
+        "NSCameraUsageDescription": "Este app precisa acessar a câmera.",
+        "NSLocationWhenInUseUsageDescription": "Este app precisa acessar sua localização.",
+        "NSFaceIDUsageDescription": "Este app usa o Face ID para autenticação.",
+        "NSPhotoLibraryUsageDescription": "Este app precisa acessar suas fotos."
+      }
     },
     "web": {
       "bundler": "metro",
       "output": "single",
       "favicon": "./assets/images/icon.png"
     },
-    "plugins": [
-      "expo-router",
-      "expo-font",
-      "expo-secure-store"
-    ],
+    "plugins": ["expo-router", "expo-font", "expo-secure-store"],
     "experiments": {
       "typedRoutes": true
     },
@@ -31,7 +33,16 @@
       }
     },
     "android": {
-      "package": "com.victor2822.RotaGuia"
+      "package": "com.victor2822.RotaGuia",
+      "permissions": [
+        "CAMERA",
+        "ACCESS_FINE_LOCATION",
+        "ACCESS_COARSE_LOCATION",
+        "USE_BIOMETRIC",
+        "USE_FINGERPRINT",
+        "READ_EXTERNAL_STORAGE",
+        "WRITE_EXTERNAL_STORAGE"
+      ]
     }
   }
 }
