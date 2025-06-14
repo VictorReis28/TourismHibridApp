@@ -9,7 +9,8 @@
     "lint": "expo lint",
     "dev:backend": "cd backend && npx tsx server.ts",
     "dev:frontend": "cd frontend && npx expo start",
-    "dev": "concurrently \"npm run dev:backend\" \"npm run dev:frontend\""
+    "dev": "concurrently \"npm run dev:backend\" \"npm run dev:frontend\"",
+    "postinstall": "node ./scripts/forceLegacyPeerDeps.js"
   },
   "dependencies": {
     "@expo-google-fonts/inter": "^0.2.3",

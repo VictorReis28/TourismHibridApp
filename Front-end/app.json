@@ -23,6 +23,15 @@
     ],
     "experiments": {
       "typedRoutes": true
+    },
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "ed9dd96b-4776-4d71-8bb8-52563f7b60f4"
+      }
+    },
+    "android": {
+      "package": "com.victor2822.RotaGuia"
     }
   }
 }
