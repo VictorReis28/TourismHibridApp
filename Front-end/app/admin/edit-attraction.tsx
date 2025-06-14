@@ -184,189 +184,194 @@ export default function EditAttraction() {
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: theme.colors.background }}>
-      <View style={[styles.header, { marginBottom: 24 }]}>
-        <TouchableOpacity
-          onPress={() => router.back()}
-          style={{ marginRight: 12 }}
-        >
-          <ArrowLeft size={28} color={theme.colors.text} />
-        </TouchableOpacity>
-        <Text style={[styles.title, { color: theme.colors.text }]}>
-          Editar Atração
-        </Text>
-      </View>
       <ScrollView
-        style={styles.form}
-        contentContainerStyle={{ paddingBottom: 24 }}
+        style={{ flex: 1 }}
+        contentContainerStyle={{ paddingBottom: 40 }}
+        keyboardShouldPersistTaps="handled"
       >
-        <View style={styles.mapContainer}>
-          <MapView
-            style={styles.map}
-            initialRegion={{
-              latitude: parseFloat(form.latitude) || 0,
-              longitude: parseFloat(form.longitude) || 0,
-              latitudeDelta: 0.01,
-              longitudeDelta: 0.01,
-            }}
-            onRegionChangeComplete={handleRegionChange}
+        <View style={[styles.header, { marginBottom: 24 }]}>
+          <TouchableOpacity
+            onPress={() => router.back()}
+            style={{ marginRight: 12 }}
           >
-            <Marker
-              coordinate={{
+            <ArrowLeft size={28} color={theme.colors.text} />
+          </TouchableOpacity>
+          <Text style={[styles.title, { color: theme.colors.text }]}>
+            Editar Atração
+          </Text>
+        </View>
+        <View style={styles.form}>
+          <View style={styles.mapContainer}>
+            <MapView
+              style={styles.map}
+              initialRegion={{
                 latitude: parseFloat(form.latitude) || 0,
                 longitude: parseFloat(form.longitude) || 0,
+                latitudeDelta: 0.01,
+                longitudeDelta: 0.01,
               }}
-              draggable
-              onDragEnd={(e) => {
-                const { latitude, longitude } = e.nativeEvent.coordinate;
-                setForm((prev) => ({
-                  ...prev,
-                  latitude: latitude.toString(),
-                  longitude: longitude.toString(),
-                }));
-              }}
-            />
-          </MapView>
-        </View>
-        <TextInput
-          style={[
-            styles.input,
-            {
-              backgroundColor: theme.colors.card,
-              color: theme.colors.text,
-              borderColor: theme.colors.border,
-            },
-          ]}
-          placeholder="Nome da atração"
-          placeholderTextColor={theme.colors.textSecondary}
-          value={form.name}
-          onChangeText={(text) => setForm((prev) => ({ ...prev, name: text }))}
-        />
-        <TextInput
-          style={[
-            styles.input,
-            styles.textArea,
-            {
-              backgroundColor: theme.colors.card,
-              color: theme.colors.text,
-              borderColor: theme.colors.border,
-            },
-          ]}
-          placeholder="Descrição"
-          placeholderTextColor={theme.colors.textSecondary}
-          multiline
-          numberOfLines={4}
-          value={form.description}
-          onChangeText={(text) =>
-            setForm((prev) => ({ ...prev, description: text }))
-          }
-        />
-        <TouchableOpacity
-          style={[
-            styles.input,
-            {
-              backgroundColor: theme.colors.card,
-              borderColor: theme.colors.border,
-              justifyContent: 'center',
-              marginBottom: 15,
-            },
-          ]}
-          onPress={() => setCategoryModalVisible(true)}
-        >
-          <Text
-            style={{
-              color: form.category
-                ? theme.colors.text
-                : theme.colors.textSecondary,
-            }}
+              onRegionChangeComplete={handleRegionChange}
+            >
+              <Marker
+                coordinate={{
+                  latitude: parseFloat(form.latitude) || 0,
+                  longitude: parseFloat(form.longitude) || 0,
+                }}
+                draggable
+                onDragEnd={(e) => {
+                  const { latitude, longitude } = e.nativeEvent.coordinate;
+                  setForm((prev) => ({
+                    ...prev,
+                    latitude: latitude.toString(),
+                    longitude: longitude.toString(),
+                  }));
+                }}
+              />
+            </MapView>
+          </View>
+          <TextInput
+            style={[
+              styles.input,
+              {
+                backgroundColor: theme.colors.card,
+                color: theme.colors.text,
+                borderColor: theme.colors.border,
+              },
+            ]}
+            placeholder="Nome da atração"
+            placeholderTextColor={theme.colors.textSecondary}
+            value={form.name}
+            onChangeText={(text) =>
+              setForm((prev) => ({ ...prev, name: text }))
+            }
+          />
+          <TextInput
+            style={[
+              styles.input,
+              styles.textArea,
+              {
+                backgroundColor: theme.colors.card,
+                color: theme.colors.text,
+                borderColor: theme.colors.border,
+              },
+            ]}
+            placeholder="Descrição"
+            placeholderTextColor={theme.colors.textSecondary}
+            multiline
+            numberOfLines={4}
+            value={form.description}
+            onChangeText={(text) =>
+              setForm((prev) => ({ ...prev, description: text }))
+            }
+          />
+          <TouchableOpacity
+            style={[
+              styles.input,
+              {
+                backgroundColor: theme.colors.card,
+                borderColor: theme.colors.border,
+                justifyContent: 'center',
+                marginBottom: 15,
+              },
+            ]}
+            onPress={() => setCategoryModalVisible(true)}
           >
-            {form.category || 'Selecione uma categoria'}
-          </Text>
-        </TouchableOpacity>
-        <Modal
-          visible={categoryModalVisible}
-          transparent
-          animationType="slide"
-          onRequestClose={() => setCategoryModalVisible(false)}
-        >
-          <View
-            style={{
-              flex: 1,
-              backgroundColor: 'rgba(0,0,0,0.4)',
-              justifyContent: 'center',
-              alignItems: 'center',
-            }}
+            <Text
+              style={{
+                color: form.category
+                  ? theme.colors.text
+                  : theme.colors.textSecondary,
+              }}
+            >
+              {form.category || 'Selecione uma categoria'}
+            </Text>
+          </TouchableOpacity>
+          <Modal
+            visible={categoryModalVisible}
+            transparent
+            animationType="slide"
+            onRequestClose={() => setCategoryModalVisible(false)}
           >
             <View
               style={{
-                backgroundColor: theme.colors.card,
-                borderRadius: 10,
-                width: '80%',
-                maxHeight: '60%',
-                padding: 20,
+                flex: 1,
+                backgroundColor: 'rgba(0,0,0,0.4)',
+                justifyContent: 'center',
+                alignItems: 'center',
               }}
             >
-              <Text
+              <View
                 style={{
-                  fontWeight: 'bold',
-                  fontSize: 18,
-                  marginBottom: 10,
-                  color: theme.colors.text,
+                  backgroundColor: theme.colors.card,
+                  borderRadius: 10,
+                  width: '80%',
+                  maxHeight: '60%',
+                  padding: 20,
                 }}
               >
-                Escolha uma categoria
-              </Text>
-              <FlatList
-                data={categories}
-                keyExtractor={(item) => item}
-                renderItem={({ item }) => (
-                  <TouchableOpacity
-                    style={{ paddingVertical: 12 }}
-                    onPress={() => {
-                      setForm((prev) => ({ ...prev, category: item }));
-                      setCategoryModalVisible(false);
-                    }}
-                  >
-                    <Text style={{ color: theme.colors.text }}>{item}</Text>
-                  </TouchableOpacity>
-                )}
-              />
-              <TouchableOpacity
-                style={{ marginTop: 10, alignSelf: 'flex-end' }}
-                onPress={() => setCategoryModalVisible(false)}
-              >
-                <Text style={{ color: theme.colors.primary }}>Cancelar</Text>
-              </TouchableOpacity>
+                <Text
+                  style={{
+                    fontWeight: 'bold',
+                    fontSize: 18,
+                    marginBottom: 10,
+                    color: theme.colors.text,
+                  }}
+                >
+                  Escolha uma categoria
+                </Text>
+                <FlatList
+                  data={categories}
+                  keyExtractor={(item) => item}
+                  renderItem={({ item }) => (
+                    <TouchableOpacity
+                      style={{ paddingVertical: 12 }}
+                      onPress={() => {
+                        setForm((prev) => ({ ...prev, category: item }));
+                        setCategoryModalVisible(false);
+                      }}
+                    >
+                      <Text style={{ color: theme.colors.text }}>{item}</Text>
+                    </TouchableOpacity>
+                  )}
+                />
+                <TouchableOpacity
+                  style={{ marginTop: 10, alignSelf: 'flex-end' }}
+                  onPress={() => setCategoryModalVisible(false)}
+                >
+                  <Text style={{ color: theme.colors.primary }}>Cancelar</Text>
+                </TouchableOpacity>
+              </View>
             </View>
-          </View>
-        </Modal>
-        <TouchableOpacity
-          style={[
-            styles.input,
-            {
-              backgroundColor: theme.colors.card,
-              borderColor: theme.colors.border,
-              justifyContent: 'center',
-              alignItems: 'center',
-              marginBottom: 15,
-              flexDirection: 'row',
-              gap: 10,
-            },
-          ]}
-          onPress={pickImage}
-        >
-          <Text style={{ color: theme.colors.text }}>
-            {imageUri ? 'Alterar imagem' : 'Selecionar imagem'}
-          </Text>
-        </TouchableOpacity>
-        {imageUri && (
-          <View style={{ alignItems: 'center', marginBottom: 15 }}>
-            <Image
-              source={{ uri: imageUri }}
-              style={{ width: 180, height: 120, borderRadius: 8 }}
-              contentFit="cover"
-            />
-          </View>
-        )}
+          </Modal>
+          <TouchableOpacity
+            style={[
+              styles.input,
+              {
+                backgroundColor: theme.colors.card,
+                borderColor: theme.colors.border,
+                justifyContent: 'center',
+                alignItems: 'center',
+                marginBottom: 15,
+                flexDirection: 'row',
+                gap: 10,
+              },
+            ]}
+            onPress={pickImage}
+          >
+            <Text style={{ color: theme.colors.text }}>
+              {imageUri ? 'Alterar imagem' : 'Selecionar imagem'}
+            </Text>
+          </TouchableOpacity>
+          {imageUri && (
+            <View style={{ alignItems: 'center', marginBottom: 15 }}>
+              <Image
+                source={{ uri: imageUri }}
+                style={{ width: 180, height: 120, borderRadius: 8 }}
+                contentFit="cover"
+              />
+            </View>
+          )}
+        </View>
       </ScrollView>
       <View
         style={{
