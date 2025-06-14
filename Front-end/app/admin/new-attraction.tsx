@@ -164,7 +164,10 @@ export default function NewAttraction() {
       style={[styles.container, { backgroundColor: theme.colors.background }]}
     >
       <View style={[styles.header, { marginBottom: 24 }]}>
-        <TouchableOpacity onPress={() => router.back()} style={{ marginRight: 12 }}>
+        <TouchableOpacity
+          onPress={() => router.back()}
+          style={{ marginRight: 12 }}
+        >
           <ArrowLeft size={28} color={theme.colors.text} />
         </TouchableOpacity>
         <Text style={[styles.title, { color: theme.colors.text }]}>
@@ -172,7 +175,12 @@ export default function NewAttraction() {
         </Text>
       </View>
 
-      <ScrollView style={styles.form}>
+      <ScrollView
+        style={styles.form}
+        contentContainerStyle={{ paddingBottom: 32 }}
+        showsVerticalScrollIndicator={false}
+        keyboardShouldPersistTaps="handled"
+      >
         <View style={styles.mapContainer}>
           <MapView
             style={styles.map}
